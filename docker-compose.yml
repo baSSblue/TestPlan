@@ -12,12 +12,12 @@ services:
   postgresdb:
     image: postgres:14-alpine
     ports:
-    - '5432:5432'
+      - '5432:5432'
     environment:
-    - POSTGRES_DB=app
-    - POSTGRES_USER=app
-    - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=app
+      - POSTGRES_USER=app
+      - POSTGRES_PASSWORD=pass
   node-app:
-      build: ./gate-simulator
-      ports:
+    build: ./gate-simulator
+    ports:
       - '9999:9999'

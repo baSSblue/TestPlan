@@ -73,8 +73,8 @@ public class DataHelper {
 
     @Value
     public static class CardInfo {
-        private String cardNumber;
-        private String status;
+         private String cardNumber;
+         private String status;
     }
 
 

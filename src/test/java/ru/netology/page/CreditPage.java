@@ -2,15 +2,21 @@ package ru.netology.page;
 
 import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.DisplayName;
+import ru.netology.data.DataHelper;
 
 import java.time.Duration;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 public class CreditPage {
+    private final SelenideElement heading = $(byText("Путешествие дня"));
+    private final SelenideElement headingPaymentCredit = $$(".button_view_extra").findBy(text("Купить в кредит"));
+    private final SelenideElement paymentByCard = $(byText("Оплата по карте"));
+    private final SelenideElement credit = $(byText("Кредит по данным карты"));
     private final SelenideElement cardNumberField = $$(".form-field").findBy(text("Номер карты")).find(".input__control");
     private final SelenideElement monthField = $$(".form-field .input-group__input-case").findBy(text("Месяц")).find(".input__control");
     private final SelenideElement yearField = $$(".form-field .input-group__input-case").findBy(text("Год")).find(".input__control");
@@ -19,10 +25,42 @@ public class CreditPage {
     private final SelenideElement resume = $$(".button__text").findBy(text("Продолжить"));
     private final SelenideElement successNotification = $(".notification_status_ok .notification__content");
     private final SelenideElement errorNotification = $(".notification_status_error .notification__content");
-    public final SelenideElement invalidFormat = $$(".form-field .input__sub").findBy(text("Неверный формат"));
-    public final SelenideElement fieldIsRequired = $$(".form-field .input__sub").findBy(text("Поле обязательно для заполнения"));
-    public final SelenideElement incorrectExpirationDate = $$(".form-field .input__sub").findBy(text("Неверно указан срок действия карты"));
-    public final SelenideElement theCardIsExpired = $$(".form-field .input__sub").findBy(text("Истёк срок действия карты"));
+    private final SelenideElement invalidFormat = $$(".form-field .input__sub").findBy(text("Неверный формат"));
+    private final SelenideElement fieldIsRequired = $$(".form-field .input__sub").findBy(text("Поле обязательно для заполнения"));
+    private final SelenideElement incorrectExpirationDate = $$(".form-field .input__sub").findBy(text("Неверно указан срок действия карты"));
+    private final SelenideElement theCardIsExpired = $$(".form-field .input__sub").findBy(text("Истёк срок действия карты"));
+
+    public void headingPaymentPageCredit() {
+        heading.shouldHave(visible);
+        headingPaymentCredit.click();
+        paymentByCard.shouldHave(visible);
+    }
+
+    public void loanPage() {
+        heading.shouldHave(visible);
+        paymentByCard.click();
+        credit.shouldHave(visible);
+    }
+
+    public CreditPage payCard(DataHelper.CardInfo info) {
+        cardNumberField.setValue(info.getCardNumber());
+        monthField.setValue(DataHelper.generateValidDate(0, 0, "MM"));
+        yearField.setValue(DataHelper.generateValidDate(0, 0, "yy"));
+        fieldOwner.setValue(DataHelper.generateName());
+        fieldCVC_CVV.setValue(DataHelper.generateCVC_CVV());
+        resume.click();
+        return new CreditPage();
+    }
+
+    public CreditPage inValidPayCard(DataHelper.CardInfo info) {
+        cardNumberField.setValue(DataHelper.generateRandomCard());
+        monthField.setValue(DataHelper.generateValidDate(0, 0, "MM"));
+        yearField.setValue(DataHelper.generateValidDate(0, 0, "yy"));
+        fieldOwner.setValue(DataHelper.generateName());
+        fieldCVC_CVV.setValue(DataHelper.generateCVC_CVV());
+        resume.click();
+        return new CreditPage();
+    }
 
     public void cardNumber(String getCardNumber) {
         cardNumberField.setValue(String.valueOf(getCardNumber));
@@ -60,5 +98,22 @@ public class CreditPage {
         errorNotification
                 .shouldBe(visible, Duration.ofSeconds(15))
                 .shouldHave(exactText(expectedText)).shouldBe(visible);
+    }
+
+    public void invalidFormatError() {
+        invalidFormat.shouldBe(visible, Duration.ofSeconds(10));
+    }
+
+
+    public void fieldIsRequiredError() {
+        fieldIsRequired.shouldBe(visible, Duration.ofSeconds(10));
+    }
+
+    public void incorrectExpirationDateError() {
+        incorrectExpirationDate.shouldBe(visible, Duration.ofSeconds(10));
+    }
+
+    public void theCardIsExpiredError() {
+        theCardIsExpired.shouldBe(visible, Duration.ofSeconds(10));
     }
 }

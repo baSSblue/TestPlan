@@ -5,10 +5,11 @@ import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.*;
 import ru.netology.data.DataHelper;
 import ru.netology.data.SQLHelper;
+
 import ru.netology.page.PaymentPage;
 
-import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.open;
+
 
 public class CreditTest {
     PaymentPage paymentPage;
@@ -22,7 +23,7 @@ public class CreditTest {
     static void tearDownAll() {
         SelenideLogger.removeListener("allure");
     }
-
+    
     @BeforeEach
     void setup() {
         paymentPage = open("http://localhost:8080", PaymentPage.class);
@@ -34,8 +35,12 @@ public class CreditTest {
     @DisplayName("Заполнение формы валидными данными")
     void shouldSuccessfullyPayFromApprovedCard() {
         var cardInfo = DataHelper.FirstCardNumberAndStatus();
-
-        paymentPage.validPayCard(cardInfo);
+        paymentPage.cardNumber(cardInfo.getCardNumber());
+        paymentPage.monthNumber(DataHelper.generateValidDate(0, 0, "MM"));
+        paymentPage.yearNumber(DataHelper.generateValidDate(0, 0, "yy"));
+        paymentPage.fullName(DataHelper.generateName());
+        paymentPage.CVC(DataHelper.generateCVC_CVV());
+        paymentPage.buttonContinue();
         paymentPage.successNotification("Операция одобрена банком.");
         var PaymentStatus = SQLHelper.getStatus();
         Assertions.assertEquals("APPROVED", PaymentStatus);
@@ -45,8 +50,13 @@ public class CreditTest {
     @DisplayName("Заполнение формы данными карты со статусом DECLINED")
     void shouldShowErrorWhenPayFromDeclinedCard() {
         var cardInfo = DataHelper.SecondCardNumberAndStatus();
-
-        paymentPage.validPayCard(cardInfo);
+        
+        paymentPage.cardNumber(cardInfo.getCardNumber());
+        paymentPage.monthNumber(DataHelper.generateValidDate(0, 0, "MM"));
+        paymentPage.yearNumber(DataHelper.generateValidDate(0, 0, "yy"));
+        paymentPage.fullName(DataHelper.generateName());
+        paymentPage.CVC(DataHelper.generateCVC_CVV());
+        paymentPage.buttonContinue();
         paymentPage.errorNotification("Ошибка! Банк отказал в проведении операции.");
         var PaymentStatus = SQLHelper.getStatus();
         Assertions.assertEquals("DECLINED", PaymentStatus);
@@ -55,10 +65,14 @@ public class CreditTest {
     @Test
     @DisplayName("Введение 16значного номера карты рандомными цифрами")
     void randomCardNumber() {
-        var cardInfo = DataHelper.generateRandomCard();
-        
-        paymentPage.validPayCard(cardInfo);
 
+        
+        paymentPage.cardNumber(DataHelper.generateRandomCard());
+        paymentPage.monthNumber(DataHelper.generateValidDate(0, 0, "MM"));
+        paymentPage.yearNumber(DataHelper.generateValidDate(0, 0, "yy"));
+        paymentPage.fullName(DataHelper.generateName());
+        paymentPage.CVC(DataHelper.generateCVC_CVV());
+        paymentPage.buttonContinue();
         paymentPage.errorNotification("Ошибка! Банк отказал в проведении операции.");
     }
 
@@ -67,14 +81,19 @@ public class CreditTest {
     void nullCardNumber() {
         var cardInfo = DataHelper.generateCardNumber();
         
-        
+        paymentPage.cardNumber(cardInfo.getCardNumber());
+        paymentPage.monthNumber(DataHelper.generateValidDate(0, 0, "MM"));
+        paymentPage.yearNumber(DataHelper.generateValidDate(0, 0, "yy"));
+        paymentPage.fullName(DataHelper.generateName());
+        paymentPage.CVC(DataHelper.generateCVC_CVV());
+        paymentPage.buttonContinue();
         paymentPage.errorNotification("Ошибка! Банк отказал в проведении операции.");
     }
 
     @Test
     @DisplayName("Введение невалидного 15значного номера карты")
     void random15CardNumber() {
-        var cardInfo = DataHelper.FirstCardNumberAndStatus();
+
         
         paymentPage.cardNumber(DataHelper.generateNotValidCard());
         paymentPage.monthNumber(DataHelper.generateValidDate(0, 0, "MM"));
@@ -96,7 +115,7 @@ public class CreditTest {
         paymentPage.fullName(DataHelper.generateName());
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.incorrectExpirationDate.shouldBe(visible);
+        paymentPage.incorrectExpirationDateError();
     }
     @Test
     @DisplayName("Введение данных карты с истекшим сроком действия (на один месяц меньше текущего)")
@@ -109,7 +128,7 @@ public class CreditTest {
         paymentPage.fullName(DataHelper.generateName());
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.theCardIsExpired.shouldBe(visible);
+        paymentPage.theCardIsExpiredError();
 
     }
     @Test
@@ -123,7 +142,7 @@ public class CreditTest {
         paymentPage.fullName(DataHelper.generateName());
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.incorrectExpirationDate.shouldBe(visible);
+        paymentPage.incorrectExpirationDateError();
     }
     @Test
     @DisplayName("Введение данных карты с истекшим сроком действия (на один год меньше текущего)")
@@ -136,7 +155,7 @@ public class CreditTest {
         paymentPage.fullName(DataHelper.generateName());
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.theCardIsExpired.shouldBe(visible);
+        paymentPage.theCardIsExpiredError();
     }
     @Test
     @DisplayName("Использование кирилицы в поле Владелец")
@@ -149,7 +168,7 @@ public class CreditTest {
         paymentPage.fullName(DataHelper.generateRandomSurnameCyrillic());
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.invalidFormat.shouldBe(visible);
+        paymentPage.invalidFormatError();
     }
 
     @Test
@@ -163,7 +182,7 @@ public class CreditTest {
         paymentPage.fullName(DataHelper.generateNotValidCard());
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.invalidFormat.shouldBe(visible);
+        paymentPage.invalidFormatError();
     }
 
     @Test
@@ -177,7 +196,7 @@ public class CreditTest {
         paymentPage.fullName(DataHelper.randomSymbol());
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.invalidFormat.shouldBe(visible);
+        paymentPage.invalidFormatError();
     }
 
     @Test
@@ -191,7 +210,7 @@ public class CreditTest {
         paymentPage.fullName(DataHelper.generateName());
         paymentPage.CVC(DataHelper.generateShortCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.invalidFormat.shouldBe(visible);
+        paymentPage.invalidFormatError();
     }
 
     @Test
@@ -205,7 +224,7 @@ public class CreditTest {
         paymentPage.fullName("    ");
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.invalidFormat.shouldBe(visible);
+        paymentPage.invalidFormatError();
     }
 
     @Test
@@ -219,7 +238,7 @@ public class CreditTest {
         paymentPage.fullName(DataHelper.generateName());
         paymentPage.CVC("000");
         paymentPage.buttonContinue();
-        paymentPage.invalidFormat.shouldBe(visible);
+        paymentPage.invalidFormatError();
     }
 
     @Test
@@ -233,7 +252,7 @@ public class CreditTest {
         paymentPage.fullName(DataHelper.generateName());
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.incorrectExpirationDate.shouldBe(visible);
+        paymentPage.incorrectExpirationDateError();
     }
 
     @Test
@@ -247,13 +266,12 @@ public class CreditTest {
         paymentPage.fullName(DataHelper.generateName());
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.incorrectExpirationDate.shouldBe(visible);
+        paymentPage.incorrectExpirationDateError();
     }
 
     @Test
     @DisplayName("Незаполненное поле номера карты")
     void spaceCardNumber(){
-        var cardInfo = DataHelper.FirstCardNumberAndStatus();
         
         paymentPage.cardNumber("");
         paymentPage.monthNumber(DataHelper.generateValidDate(0, 0, "MM"));
@@ -261,7 +279,7 @@ public class CreditTest {
         paymentPage.fullName(DataHelper.generateName());
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.fieldIsRequired.shouldBe(visible);
+        paymentPage.fieldIsRequiredError();
     }
 
     @Test
@@ -275,7 +293,7 @@ public class CreditTest {
         paymentPage.fullName(DataHelper.generateName());
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.fieldIsRequired.shouldBe(visible);
+        paymentPage.fieldIsRequiredError();
     }
 
     @Test
@@ -289,7 +307,7 @@ public class CreditTest {
         paymentPage.fullName(DataHelper.generateName());
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.fieldIsRequired.shouldBe(visible);
+        paymentPage.fieldIsRequiredError();
     }
 
     @Test
@@ -303,7 +321,7 @@ public class CreditTest {
         paymentPage.fullName("");
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.fieldIsRequired.shouldBe(visible);
+        paymentPage.fieldIsRequiredError();
     }
 
     @Test
@@ -317,6 +335,6 @@ public class CreditTest {
         paymentPage.fullName(DataHelper.generateName());
         paymentPage.CVC("");
         paymentPage.buttonContinue();
-        paymentPage.fieldIsRequired.shouldBe(visible);
+        paymentPage.fieldIsRequiredError();
     }
 }

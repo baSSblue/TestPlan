@@ -41,24 +41,24 @@ public class PaymentPage {
         credit.shouldHave(visible);
     }
 
-    public PaymentPage validPayCard(DataHelper.CardInfo info) {
-        cardNumberField.setValue(info.getCardNumber());
-        monthField.setValue(DataHelper.generateValidDate(0, 0, "MM"));
-        yearField.setValue(DataHelper.generateValidDate(0, 0, "yy"));
-        fieldOwner.setValue(DataHelper.generateName());
-        fieldCVC_CVV.setValue(DataHelper.generateCVC_CVV());
-        resume.click();
-        return new PaymentPage();
+    public void cardNumber(String getCardNumber) {
+        cardNumberField.setValue(getCardNumber);
     }
 
-    public PaymentPage inValidPayCard(DataHelper.CardInfo info) {
-        cardNumberField.setValue(DataHelper.generateRandomCard());
-        monthField.setValue(DataHelper.generateValidDate(0, 0, "MM"));
-        yearField.setValue(DataHelper.generateValidDate(0, 0, "yy"));
-        fieldOwner.setValue(DataHelper.generateName());
-        fieldCVC_CVV.setValue(DataHelper.generateCVC_CVV());
-        resume.click();
-        return new PaymentPage();
+    public void monthNumber(String getMonthNumber) {
+        monthField.setValue(getMonthNumber);
+    }
+
+    public void yearNumber(String getYears) {
+        yearField.setValue(getYears);
+    }
+
+    public void fullName(String getName) {
+        fieldOwner.setValue(getName);
+    }
+
+    public void CVC(String getCVC) {
+        fieldCVC_CVV.setValue(getCVC);
     }
 
     public void buttonContinue() {

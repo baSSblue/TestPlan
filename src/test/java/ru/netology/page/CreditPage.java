@@ -42,44 +42,25 @@ public class CreditPage {
         credit.shouldHave(visible);
     }
 
-    public CreditPage payCard(DataHelper.CardInfo info) {
-        cardNumberField.setValue(info.getCardNumber());
-        monthField.setValue(DataHelper.generateValidDate(0, 0, "MM"));
-        yearField.setValue(DataHelper.generateValidDate(0, 0, "yy"));
-        fieldOwner.setValue(DataHelper.generateName());
-        fieldCVC_CVV.setValue(DataHelper.generateCVC_CVV());
-        resume.click();
-        return new CreditPage();
-    }
-
-    public CreditPage inValidPayCard(DataHelper.CardInfo info) {
-        cardNumberField.setValue(DataHelper.generateRandomCard());
-        monthField.setValue(DataHelper.generateValidDate(0, 0, "MM"));
-        yearField.setValue(DataHelper.generateValidDate(0, 0, "yy"));
-        fieldOwner.setValue(DataHelper.generateName());
-        fieldCVC_CVV.setValue(DataHelper.generateCVC_CVV());
-        resume.click();
-        return new CreditPage();
-    }
 
     public void cardNumber(String getCardNumber) {
-        cardNumberField.setValue(String.valueOf(getCardNumber));
+        cardNumberField.setValue(getCardNumber);
     }
 
     public void monthNumber(String getMonthNumber) {
-        monthField.setValue(String.valueOf(getMonthNumber));
+        monthField.setValue(getMonthNumber);
     }
 
     public void yearNumber(String getYears) {
-        yearField.setValue(String.valueOf(getYears));
+        yearField.setValue(getYears);
     }
 
     public void fullName(String getName) {
-        fieldOwner.setValue(String.valueOf(getName));
+        fieldOwner.setValue(getName);
     }
 
     public void CVC(String getCVC) {
-        fieldCVC_CVV.setValue(String.valueOf(getCVC));
+        fieldCVC_CVV.setValue(getCVC);
     }
 
     public void buttonContinue() {

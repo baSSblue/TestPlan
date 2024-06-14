@@ -30,6 +30,7 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.24'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
     testImplementation 'io.qameta.allure:allure-selenide:2.20.1'
+    testImplementation 'org.postgresql:postgresql:42.7.3'
 }
 
 test {

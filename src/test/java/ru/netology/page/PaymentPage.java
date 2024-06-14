@@ -14,6 +14,7 @@ import static com.codeborne.selenide.Selenide.$$;
 public class PaymentPage {
     private final SelenideElement heading = $(byText("Путешествие дня"));
     private final SelenideElement headingPayment = $$(".button_size_m").findBy(text("Купить"));
+    private final SelenideElement headingPaymentCredit = $$(".button_view_extra").findBy(text("Купить в кредит"));
     private final SelenideElement paymentByCard = $(byText("Оплата по карте"));
     private final SelenideElement credit = $(byText("Кредит по данным карты"));
     private final SelenideElement cardNumberField = $$(".form-field").findBy(text("Номер карты")).find(".input__control");
@@ -37,7 +38,7 @@ public class PaymentPage {
 
     public void loanPage() {
         heading.shouldHave(visible);
-        paymentByCard.click();
+        headingPaymentCredit.click();
         credit.shouldHave(visible);
     }
 

@@ -74,7 +74,7 @@ public class PaymentTest {
         paymentPage.fullName(DataHelper.generateName());
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.errorNotification("Ошибка! Банк отказал в проведении операции.");
+        paymentPage.invalidFormatError();
     }
 
     @Test
@@ -88,7 +88,7 @@ public class PaymentTest {
         paymentPage.fullName(DataHelper.generateName());
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.errorNotification("Ошибка! Банк отказал в проведении операции.");
+        paymentPage.invalidFormatError();
     }
 
     @Test
@@ -102,7 +102,7 @@ public class PaymentTest {
         paymentPage.fullName(DataHelper.generateName());
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.errorNotification("Ошибка! Банк отказал в проведении операции.");
+        paymentPage.invalidFormatError();
     }
 
     @Test

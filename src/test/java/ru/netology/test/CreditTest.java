@@ -42,7 +42,7 @@ public class CreditTest {
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
         paymentPage.successNotification("Операция одобрена банком.");
-        var PaymentStatus = SQLHelper.getStatus();
+        var PaymentStatus = SQLHelper.getStatusCredit();
         Assertions.assertEquals("APPROVED", PaymentStatus);
     }
 
@@ -58,7 +58,7 @@ public class CreditTest {
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
         paymentPage.errorNotification("Ошибка! Банк отказал в проведении операции.");
-        var PaymentStatus = SQLHelper.getStatus();
+        var PaymentStatus = SQLHelper.getStatusCredit();
         Assertions.assertEquals("DECLINED", PaymentStatus);
     }
 
@@ -73,7 +73,7 @@ public class CreditTest {
         paymentPage.fullName(DataHelper.generateName());
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.invalidFormatError();
+        paymentPage.errorNotification("Ошибка! Банк отказал в проведении операции.");
     }
 
     @Test
@@ -224,7 +224,7 @@ public class CreditTest {
         paymentPage.fullName("    ");
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.invalidFormatError();
+        paymentPage.fieldIsRequiredError();
     }
 
     @Test
@@ -252,7 +252,7 @@ public class CreditTest {
         paymentPage.fullName(DataHelper.generateName());
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.incorrectExpirationDateError();
+        paymentPage.theCardIsExpiredError();
     }
 
     @Test

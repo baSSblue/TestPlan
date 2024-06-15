@@ -74,7 +74,7 @@ public class PaymentTest {
         paymentPage.fullName(DataHelper.generateName());
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.invalidFormatError();
+        paymentPage.errorNotification("Ошибка! Банк отказал в проведении операции.");
     }
 
     @Test
@@ -226,7 +226,7 @@ public class PaymentTest {
         paymentPage.fullName("    ");
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.invalidFormatError();
+        paymentPage.fieldIsRequiredError();
     }
 
     @Test
@@ -254,7 +254,7 @@ public class PaymentTest {
         paymentPage.fullName(DataHelper.generateName());
         paymentPage.CVC(DataHelper.generateCVC_CVV());
         paymentPage.buttonContinue();
-        paymentPage.incorrectExpirationDateError();
+        paymentPage.theCardIsExpiredError();
     }
 
     @Test
